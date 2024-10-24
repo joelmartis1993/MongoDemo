@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .register-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 300px;
+        }
+        h2 {
+            text-align: center;
+            color: #61b2ff;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+        }
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .register-btn {
+            width: 100%;
+            padding: 10px;
+            background-color: #61b2ff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .register-btn:hover {
+            opacity: 0.9;
+        }
+        .error {
+            color: red;
+            font-size: 12px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <h2>Register</h2>
+        <form th:action="@{/register}" method="post" onsubmit="return validateForm()">
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" placeholder="Enter Username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" placeholder="Enter Password" required minlength="6">
+            </div>
+            <div class="form-group">
+                <label for="repeat-password">Repeat Password:</label>
+                <input type="password" id="repeat-password" name="repeatPassword" placeholder="Repeat Password" required>
+            </div>
+            <div id="error-message" class="error">Passwords do not match</div>
+            <button type="submit" class="register-btn">Register</button>
+        </form>
+    </div>
+
+    <script>
+        function validateForm() {
+            var password = document.getElementById("password").value;
+            var repeatPassword = document.getElementById("repeat-password").value;
+
+            if (password !== repeatPassword) {
+                document.getElementById("error-message").style.display = "block";
+                return false;
+            }
+            return true;
+        }
+    </script>
+</body>
+</html>

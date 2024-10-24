@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User Dashboard</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+        }
+        .header {
+            background-color: #61b2ff;
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+        }
+        .sidebar {
+            background-color: #ff6f61;
+            color: white;
+            height: 100vh;
+            width: 250px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            padding-top: 20px;
+            text-align: center;
+        }
+        .sidebar a {
+            display: block;
+            color: white;
+            padding: 15px;
+            text-decoration: none;
+            margin: 10px 0;
+        }
+        .sidebar a:hover {
+            background-color: #ffafbd;
+        }
+        .content {
+            margin-left: 250px;
+            padding: 20px;
+        }
+        .dashboard-section {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .dashboard-section h2 {
+            color: #61b2ff;
+        }
+        .welcome-message {
+            font-size: 24px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Header Section -->
+<div class="header">
+    <h1>Welcome to Your Dashboard</h1>
+</div>
+
+<!-- Sidebar Navigation -->
+<div class="sidebar">
+    <a th:href="@{/profile}">Profile</a>
+    <a th:href="@{/settings}">Settings</a>
+    <a th:href="@{/logout}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
+    <form th:action="@{/logout}" method="post" id="logout-form" style="display: none;"></form>
+</div>
+
+
+<!-- Main Content Area -->
+<div class="content">
+    <!-- Welcome Message -->
+    <div class="dashboard-section">
+        <h2 class="welcome-message">Hello, <span th:text="${username}">User</span>!</h2>
+        <p>Welcome back! Here’s a summary of your recent activities and project updates.</p>
+    </div>
+
+    <!-- Section for Recent Activities -->
+    <div class="dashboard-section">
+        <h2>Recent Activities</h2>
+        <p>Here you can display the user's recent activities such as login history, recent projects, etc.</p>
+    </div>
+
+    <!-- Section for Project Status -->
+    <div class="dashboard-section">
+        <h2>Project Status</h2>
+        <p>Display the status of the user's ongoing projects here, like progress bars, deadlines, etc.</p>
+    </div>
+</div>
+
+</body>
+</html>
