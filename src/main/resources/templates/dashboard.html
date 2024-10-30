@@ -1,66 +1,110 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>User Dashboard</title>
     <style>
         body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
+          margin: 0;
+          font-family: Arial, sans-serif;
+          background-color: #f4f4f9;
         }
         .header {
-            background-color: #61b2ff;
-            color: white;
-            padding: 15px;
-            text-align: center;
+          background-color: #61b2ff;
+          color: white;
+          padding: 15px;
+          text-align: center;
         }
         .header h1 {
-            margin: 0;
+          margin: 0;
         }
         .sidebar {
-            background-color: #ff6f61;
-            color: white;
-            height: 100vh;
-            width: 250px;
-            position: fixed;
-            top: 0;
-            left: 0;
-            padding-top: 20px;
-            text-align: center;
+          background-color: #ff6f61;
+          color: white;
+          height: 100vh;
+          width: 250px;
+          position: fixed;
+          top: 0;
+          left: 0;
+          padding-top: 20px;
+          text-align: center;
         }
         .sidebar a {
-            display: block;
-            color: white;
-            padding: 15px;
-            text-decoration: none;
-            margin: 10px 0;
+          display: block;
+          color: white;
+          padding: 15px;
+          text-decoration: none;
+          margin: 10px 0;
         }
         .sidebar a:hover {
-            background-color: #ffafbd;
+          background-color: #ffafbd;
         }
         .content {
-            margin-left: 250px;
-            padding: 20px;
+          margin-left: 250px;
+          padding: 20px;
         }
         .dashboard-section {
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
+          background-color: white;
+          padding: 20px;
+          border-radius: 10px;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+          margin-bottom: 20px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
         }
         .dashboard-section h2 {
-            color: #61b2ff;
+          color: #61b2ff;
+          margin: 0;
         }
-        .welcome-message {
-            font-size: 24px;
-            color: #333;
+        .action-btn {
+          background-color: #ff6f61;
+          color: white;
+          padding: 10px;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+          font-size: 16px;
+          width: 150px;
+          text-align: center;
+        }
+        .action-btn:hover {
+          opacity: 0.9;
+        }
+
+        /* Modal styles */
+        .modal {
+          display: none;
+          position: fixed;
+          z-index: 1;
+          left: 0;
+          top: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0, 0, 0, 0.5);
+          justify-content: center;
+          align-items: center;
+        }
+        .modal-content {
+          background-color: white;
+          padding: 20px;
+          border-radius: 10px;
+          width: 300px;
+          text-align: center;
+          position: relative;
+        }
+        .close {
+          color: #aaa;
+          font-size: 28px;
+          font-weight: bold;
+          position: absolute;
+          top: 10px;
+          right: 20px;
+          cursor: pointer;
         }
     </style>
 </head>
 <body>
-
 <!-- Header Section -->
 <div class="header">
     <h1>Welcome to Your Dashboard</h1>
@@ -70,31 +114,194 @@
 <div class="sidebar">
     <a th:href="@{/profile}">Profile</a>
     <a th:href="@{/settings}">Settings</a>
-    <a th:href="@{/logout}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
-    <form th:action="@{/logout}" method="post" id="logout-form" style="display: none;"></form>
+    <a
+            th:href="@{/logout}"
+            onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+    >Logout</a
+    >
+    <form
+            th:action="@{/logout}"
+            method="post"
+            id="logout-form"
+            style="display: none"
+    ></form>
 </div>
-
 
 <!-- Main Content Area -->
 <div class="content">
-    <!-- Welcome Message -->
+    <!-- Check Balance Section with Modal Trigger -->
     <div class="dashboard-section">
-        <h2 class="welcome-message">Hello, <span th:text="${username}">User</span>!</h2>
-        <p>Welcome back! Here’s a summary of your recent activities and project updates.</p>
+        <h2>Check Balance</h2>
+        <button class="action-btn" onclick="openBalanceModal()">
+            Check Balance
+        </button>
     </div>
 
-    <!-- Section for Recent Activities -->
+    <!-- Withdraw Balance Section with Modal Trigger -->
     <div class="dashboard-section">
-        <h2>Recent Activities</h2>
-        <p>Here you can display the user's recent activities such as login history, recent projects, etc.</p>
+        <h2>Withdraw Balance</h2>
+        <button class="action-btn" onclick="openWithdrawModal()">
+            Withdraw
+        </button>
     </div>
 
-    <!-- Section for Project Status -->
+    <!-- Send Money Section with Modal Trigger -->
     <div class="dashboard-section">
-        <h2>Project Status</h2>
-        <p>Display the status of the user's ongoing projects here, like progress bars, deadlines, etc.</p>
+        <h2>Send Money</h2>
+        <button class="action-btn" onclick="openSendMoneyModal()">
+            Send Money
+        </button>
     </div>
 </div>
 
+<!-- Balance Modal -->
+<div id="balanceModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeBalanceModal()">&times;</span>
+        <h2>Your Balance</h2>
+        <p id="balanceAmount">$0.00</p>
+        <!-- Balance will be displayed here -->
+    </div>
+</div>
+
+<!-- Withdraw Balance Modal -->
+<div id="withdrawModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeWithdrawModal()">&times;</span>
+        <h2>Withdraw Balance</h2>
+        <input
+                type="text"
+                id="withdrawAmount"
+                placeholder="Enter amount"
+                style="padding: 8px; width: 100%; margin-bottom: 20px"
+                oninput="validateAmountInput(this)"
+        />
+        <button
+                class="action-btn"
+                style="width: 100%; margin-bottom: 10px"
+                onclick="submitWithdraw()"
+        >
+            Submit
+        </button>
+        <button
+                class="action-btn"
+                style="width: 100%; background-color: #ccc"
+                onclick="closeWithdrawModal()"
+        >
+            Cancel
+        </button>
+        <p
+                id="error-message"
+                style="color: red; display: none; font-size: 14px"
+        >
+            Please enter a valid amount
+        </p>
+    </div>
+</div>
+
+<!-- Send Money Modal -->
+<div id="sendMoneyModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeSendMoneyModal()">&times;</span>
+        <h2>Send Money</h2>
+        <input
+                type="text"
+                id="username"
+                placeholder="Enter recipient username"
+                style="padding: 8px; width: 100%; margin-bottom: 20px"
+        />
+        <button
+                class="action-btn"
+                style="width: 100%; margin-bottom: 10px"
+                onclick="submitSendMoney()"
+        >
+            Submit
+        </button>
+        <button
+                class="action-btn"
+                style="width: 100%; background-color: #ccc"
+                onclick="closeSendMoneyModal()"
+        >
+            Cancel
+        </button>
+        <p
+                id="username-error-message"
+                style="color: red; display: none; font-size: 14px"
+        >
+            Please enter a valid username
+        </p>
+    </div>
+</div>
+
+<script>
+    // Open and Close Balance Modal
+    function openBalanceModal() {
+      document.getElementById("balanceModal").style.display = "flex";
+      document.getElementById("balanceAmount").innerText = "$500.00"; // Replace with actual balance dynamically
+    }
+    function closeBalanceModal() {
+      document.getElementById("balanceModal").style.display = "none";
+    }
+
+    // Open and Close Withdraw Modal
+    function openWithdrawModal() {
+      document.getElementById("withdrawModal").style.display = "flex";
+    }
+    function closeWithdrawModal() {
+      document.getElementById("withdrawModal").style.display = "none";
+    }
+
+    // Submit Withdraw
+    function submitWithdraw() {
+      const amountInput = document.getElementById("withdrawAmount");
+      const errorMessage = document.getElementById("error-message");
+
+      if (amountInput.value === "" || isNaN(amountInput.value)) {
+        errorMessage.style.display = "block"; // Show error if input is empty or not a number
+      } else {
+        errorMessage.style.display = "none";
+        alert(
+          "Withdrawal request submitted for amount: $" + amountInput.value
+        );
+        closeWithdrawModal();
+        // Additional logic for handling the withdrawal can be added here
+      }
+    }
+
+    // Close modals when clicking outside of them
+    window.onclick = function (event) {
+      const balanceModal = document.getElementById("balanceModal");
+      const withdrawModal = document.getElementById("withdrawModal");
+      if (event.target === balanceModal) {
+        balanceModal.style.display = "none";
+      } else if (event.target === withdrawModal) {
+        withdrawModal.style.display = "none";
+      }
+    };
+
+    // Open and Close Send Money Modal
+    function openSendMoneyModal() {
+      document.getElementById("sendMoneyModal").style.display = "flex";
+    }
+
+    function closeSendMoneyModal() {
+      document.getElementById("sendMoneyModal").style.display = "none";
+    }
+
+    // Submit Send Money with validation
+    function submitSendMoney() {
+      const usernameInput = document.getElementById("username");
+      const errorMessage = document.getElementById("username-error-message");
+
+      if (usernameInput.value.trim() === "") {
+        errorMessage.style.display = "block"; // Show error if username is empty
+      } else {
+        errorMessage.style.display = "none";
+        alert("Money sent to: " + usernameInput.value);
+        closeSendMoneyModal();
+        // Additional logic for handling send money can be added here
+      }
+    }
+</script>
 </body>
 </html>

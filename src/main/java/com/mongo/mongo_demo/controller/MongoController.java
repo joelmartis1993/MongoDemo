@@ -40,4 +40,10 @@ public class MongoController {
         return mongoRepo.findAll();
     }
 
+
+    @PostMapping("/logout")
+    public String logout(){
+        return "redirect:/login";
+    }
+
 }
